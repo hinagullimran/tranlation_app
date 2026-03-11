@@ -6,6 +6,7 @@ A premium, high-performance voice translation web application that provides inst
 
 - **🎤 Live Voice Input**: Real-time transcription using the Web Speech API.
 - **🔄 Bi-directional Translation**: Easily toggle between English-to-Finnish and Finnish-to-English.
+- **🌍 Multi-Language Support**: Choose from over 15 languages including English, Finnish, Spanish, French, German, Hindi, Chinese, Japanese, Russian, Portuguese, Italian, Arabic, Korean, Swedish, and Norwegian.
 - **⚡ Low Latency**: Optimized for quick feedback with interim transcription results.
 - **💎 Premium Design**: 
   - Glassmorphism interface.
