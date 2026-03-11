@@ -6,7 +6,7 @@ A premium, high-performance voice translation web application that provides inst
 
 - **🎤 Live Video & Subtitles**: Real-time webcam feed with live translated floating subtitles.
 - **🔄 Bi-directional Translation**: Easily toggle between languages using the control grid.
-- **🌍 Multi-Language Support**: Support for English, Finnish, Spanish, French, German, Hindi, Chinese, Japanese, Russian, Portuguese, Italian, Arabic, Korean, Swedish, Norwegian, and **Urdu**.
+- **🌍 Multi-Language Hub**: Switch between **English**, **Urdu**, **German**, and **Chinese** with instant Right-to-Left (RTL) support.
 - **⚡ Low Latency**: Fast transcription and cloud-based translation.
 - **💎 Premium Design**: 
   - Glassmorphism interface.
