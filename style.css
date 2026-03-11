@@ -143,6 +143,40 @@ body::before {
   transform: scaleX(-1); /* Flip for natural view */
 }
 
+.hardware-badge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(0, 0, 0, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: var(--success);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 21;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  animation: glideIn 0.5s ease;
+}
+
+.hardware-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: var(--success);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--success);
+}
+
+@keyframes glideIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
 .subtitle-overlay {
   position: absolute;
   bottom: 10%;

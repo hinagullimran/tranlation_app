@@ -55,6 +55,11 @@ A premium, high-performance voice translation web application that provides inst
 4. **Translate**: Once you stop speaking or pause for a moment, the final result is sent for translation automatically.
 5. **Listen**: The translated text appears in the "Translated" box below.
 
-## 📝 License
+## 🖥️ Professional Hardware Support
 
-This project is open-source and created for educational purposes.
+Gull Translate is optimized for high-end optical sensors. It is fully compatible with the **Gull Pro (鴎)** professional webcam series, ensuring 8k resolution processing and crystal-clear voice targeting.
+
+![Gull Pro Webcam](webcam_hero.png)
+
+*Branding powered by Gull Hardware Engineering.*
+
