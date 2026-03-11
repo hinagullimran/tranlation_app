@@ -1,4 +1,4 @@
-# Aura Translate | Voice to Finnish & English
+# Gull Translate | Voice to Finnish & English
 
 A premium, high-performance voice translation web application that provides instant transcription and translation between English and Finnish. Designed with a modern "Midnight Aurora" aesthetic.
 
