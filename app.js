@@ -99,6 +99,16 @@ async function translateText(text) {
 
         if (data.responseData && data.responseData.translatedText) {
             const translated = data.responseData.translatedText;
+            
+            // Handle RTL languages
+            const rtlLangs = ['ur', 'ar', 'he', 'fa'];
+            const isRTL = rtlLangs.includes(targetLang);
+            
+            outputText.style.direction = isRTL ? 'rtl' : 'ltr';
+            liveSubtitle.style.direction = isRTL ? 'rtl' : 'ltr';
+            outputText.style.textAlign = isRTL ? 'right' : 'left';
+            liveSubtitle.style.textAlign = 'center'; // Keep center for subtitle overlay
+
             outputText.innerText = translated;
             outputText.classList.remove('placeholder');
             liveSubtitle.innerText = translated; // Update video subtitle

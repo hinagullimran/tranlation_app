@@ -1,18 +1,18 @@
 # Gull Translate | Voice to Finnish & English
 
-A premium, high-performance voice translation web application that provides instant transcription and translation between English and Finnish. Designed with a modern "Midnight Aurora" aesthetic.
+A premium, high-performance voice translation web application that provides instant transcription and translation. Features a high-performance Mint Green glassmorphism interface and live webcam subtitles.
 
 ## ✨ Features
 
-- **🎤 Live Voice Input**: Real-time transcription using the Web Speech API.
-- **🔄 Bi-directional Translation**: Easily toggle between English-to-Finnish and Finnish-to-English.
-- **🌍 Multi-Language Support**: Choose from over 15 languages including English, Finnish, Spanish, French, German, Hindi, Chinese, Japanese, Russian, Portuguese, Italian, Arabic, Korean, Swedish, and Norwegian.
-- **⚡ Low Latency**: Optimized for quick feedback with interim transcription results.
+- **🎤 Live Video & Subtitles**: Real-time webcam feed with live translated floating subtitles.
+- **🔄 Bi-directional Translation**: Easily toggle between languages using the control grid.
+- **🌍 Multi-Language Support**: Support for English, Finnish, Spanish, French, German, Hindi, Chinese, Japanese, Russian, Portuguese, Italian, Arabic, Korean, Swedish, Norwegian, and **Urdu**.
+- **⚡ Low Latency**: Fast transcription and cloud-based translation.
 - **💎 Premium Design**: 
   - Glassmorphism interface.
-  - Midnight Aurora animated background.
-  - Responsive layout for mobile and desktop.
-  - Smooth micro-animations and pulsing indicators.
+  - Interactive "Mint Green" background.
+  - Responsive layouts.
+  - Right-to-Left (RTL) text support for languages like Urdu and Arabic.
 - **🌐 No Setup**: Uses public APIs and browser-native features; no API keys required.
 
 ## 🚀 Getting Started
