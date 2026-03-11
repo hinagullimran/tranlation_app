@@ -7,6 +7,7 @@ const targetLangSelect = document.getElementById('target-lang');
 const swapBtn = document.getElementById('swap-langs');
 const video = document.getElementById('webcam-feed');
 const liveSubtitle = document.getElementById('live-subtitle');
+const voiceToggle = document.getElementById('voice-output-toggle');
 
 let isListening = false;
 let recognition;
@@ -191,7 +192,9 @@ async function translateText(text) {
             liveSubtitle.innerText = translated; // Update video subtitle
             statusText.innerText = "Translated!";
             
-            speakText(translated, targetLang);
+            if (voiceToggle.checked) {
+                speakText(translated, targetLang);
+            }
         }
     } catch (error) {
         console.error("Translation error:", error);
