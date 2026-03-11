@@ -17,13 +17,37 @@
                 <p>Instant voice translation for Finnish & English</p>
             </header>
 
-            <div class="mode-selector">
-                <span id="label-en" class="lang-label active">ENGLISH</span>
-                <label class="switch">
-                    <input type="checkbox" id="mode-toggle">
-                    <span class="slider"></span>
-                </label>
-                <span id="label-fi" class="lang-label">FINNISH</span>
+            <div class="controls-grid">
+                <select id="src-lang" class="lang-select">
+                    <option value="en-US">English</option>
+                    <option value="fi-FI">Finnish</option>
+                    <option value="es-ES">Spanish</option>
+                    <option value="fr-FR">French</option>
+                    <option value="de-DE">German</option>
+                    <option value="hi-IN">Hindi</option>
+                    <option value="zh-CN">Chinese</option>
+                </select>
+                <button class="swap-btn" id="swap-langs">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M6.99 11L3 15l3.99 4v-3H14v-2H6.99v-3zM21 9l-3.99-4v3H10v2h7.01v3L21 9z"/>
+                    </svg>
+                </button>
+                <select id="target-lang" class="lang-select">
+                    <option value="fi">Finnish</option>
+                    <option value="en">English</option>
+                    <option value="es">Spanish</option>
+                    <option value="fr">French</option>
+                    <option value="de">German</option>
+                    <option value="hi">Hindi</option>
+                    <option value="zh">Chinese</option>
+                </select>
+            </div>
+
+            <div class="video-container">
+                <video id="webcam-feed" autoplay playsinline muted></video>
+                <div class="subtitle-overlay">
+                    <div id="live-subtitle">Your translation will appear here live...</div>
+                </div>
             </div>
 
             <div class="io-section">

@@ -1,13 +1,32 @@
 const micBtn = document.getElementById('mic-btn');
 const inputText = document.getElementById('input-text');
 const outputText = document.getElementById('output-text');
-const modeToggle = document.getElementById('mode-toggle');
 const statusText = document.getElementById('status');
-const labelEn = document.getElementById('label-en');
-const labelFi = document.getElementById('label-fi');
+const srcLangSelect = document.getElementById('src-lang');
+const targetLangSelect = document.getElementById('target-lang');
+const swapBtn = document.getElementById('swap-langs');
+const video = document.getElementById('webcam-feed');
+const liveSubtitle = document.getElementById('live-subtitle');
 
 let isListening = false;
 let recognition;
+let stream;
+
+// Initialize Webcam
+async function initWebcam() {
+    try {
+        stream = await navigator.mediaDevices.getUserMedia({ 
+            video: { width: 1280, height: 720 }, 
+            audio: false 
+        });
+        video.srcObject = stream;
+    } catch (err) {
+        console.error("Webcam error:", err);
+        statusText.innerText = "Camera access denied. Audio only mode.";
+    }
+}
+
+initWebcam();
 
 // Initialize Speech Recognition
 if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
@@ -19,7 +38,7 @@ if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
     recognition.onstart = () => {
         isListening = true;
         micBtn.classList.add('listening');
-        statusText.innerText = "Listening...";
+        statusText.innerText = "Targeting Voice...";
         statusText.classList.add('active');
     };
 
@@ -27,7 +46,7 @@ if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
         isListening = false;
         micBtn.classList.remove('listening');
         if (statusText.innerText !== "Error occurred") {
-            statusText.innerText = "Click to start again";
+            statusText.innerText = "Click to Resume Recording";
         }
         statusText.classList.remove('active');
     };
@@ -44,12 +63,15 @@ if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
             }
         }
 
-        if (finalTranscript || interimTranscript) {
-            inputText.innerText = finalTranscript || interimTranscript;
+        const currentText = finalTranscript || interimTranscript;
+        if (currentText) {
+            inputText.innerText = currentText;
             inputText.classList.remove('placeholder');
             
             if (finalTranscript) {
                 translateText(finalTranscript);
+            } else {
+                liveSubtitle.innerText = currentText;
             }
         }
     };
@@ -60,62 +82,57 @@ if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
         micBtn.classList.remove('listening');
     };
 } else {
-    statusText.innerText = "Speech Recognition not supported in this browser.";
+    statusText.innerText = "Speech Recognition not supported.";
     micBtn.disabled = true;
 }
 
 // Translation Function
 async function translateText(text) {
-    const isFiToEn = modeToggle.checked;
-    const sourceLang = isFiToEn ? 'fi' : 'en';
-    const targetLang = isFiToEn ? 'en' : 'fi';
+    const srcLang = srcLangSelect.value.split('-')[0];
+    const targetLang = targetLangSelect.value;
 
-    statusText.innerText = "Translating...";
+    statusText.innerText = "Processing Translation...";
     
     try {
-        // Using MyMemory API (Free, no key required for basic usage)
-        const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${sourceLang}|${targetLang}`);
+        const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${srcLang}|${targetLang}`);
         const data = await response.json();
 
         if (data.responseData && data.responseData.translatedText) {
-            outputText.innerText = data.responseData.translatedText;
+            const translated = data.responseData.translatedText;
+            outputText.innerText = translated;
             outputText.classList.remove('placeholder');
+            liveSubtitle.innerText = translated; // Update video subtitle
             statusText.innerText = "Translated!";
             
-            // Auto-speak translation (Optional, but adds a premium feel)
-            // speakText(data.responseData.translatedText, targetLang);
+            // Auto-speak translation
+            speakText(translated, targetLang);
         } else {
             throw new Error("Translation failed");
         }
     } catch (error) {
         console.error("Translation error:", error);
-        statusText.innerText = "Translation error. Try again.";
+        statusText.innerText = "Translation error.";
     }
 }
 
-// Toggle logic
-modeToggle.addEventListener('change', () => {
-    const isFiToEn = modeToggle.checked;
-    if (isFiToEn) {
-        labelEn.classList.remove('active');
-        labelFi.classList.add('active');
-        recognition.lang = 'fi-FI';
-    } else {
-        labelEn.classList.add('active');
-        labelFi.classList.remove('active');
-        recognition.lang = 'en-US';
-    }
+// Language Logic
+swapBtn.addEventListener('click', () => {
+    const temp = srcLangSelect.value;
+    // Note: Simple swap might need careful mapping of BCP-47 to ISO codes
+    // For now, let's just swap the indexes if they match
+    const currentSrc = srcLangSelect.value;
+    const currentTarget = targetLangSelect.value;
     
-    // Reset views
-    inputText.innerText = "Speak something...";
-    inputText.classList.add('placeholder');
-    outputText.innerText = "Translation will appear here";
-    outputText.classList.add('placeholder');
+    // Attempt to find matching pairs
+    const srcOptions = Array.from(srcLangSelect.options);
+    const targetOptions = Array.from(targetLangSelect.options);
     
-    if (isListening) {
-        recognition.stop();
-        setTimeout(() => recognition.start(), 300);
-    }
+    const newTarget = srcOptions.find(o => o.value.startsWith(currentTarget))?.value || srcLangSelect.value;
+    const newSrc = targetOptions.find(o => currentSrc.startsWith(o.value))?.value || targetLangSelect.value;
+
+    // Direct swap for common ones
+    srcLangSelect.value = srcOptions.find(o => o.value.startsWith(currentTarget))?.value || srcLangSelect.value;
+    targetLangSelect.value = targetOptions.find(o => currentSrc.startsWith(o.value))?.value || targetLangSelect.value;
 });
 
 // Mic Click logic
@@ -123,15 +140,19 @@ micBtn.addEventListener('click', () => {
     if (isListening) {
         recognition.stop();
     } else {
-        // Set language based on toggle
-        recognition.lang = modeToggle.checked ? 'fi-FI' : 'en-US';
+        recognition.lang = srcLangSelect.value;
         recognition.start();
     }
 });
 
-// Helper for Voice Output (optional enhancement)
+// Helper for Voice Output
 function speakText(text, lang) {
+    window.speechSynthesis.cancel(); // Stop overlap
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = lang === 'fi' ? 'fi-FI' : 'en-US';
+    // Find a voice for the target language
+    const voices = window.speechSynthesis.getVoices();
+    const voice = voices.find(v => v.lang.startsWith(lang));
+    if (voice) utterance.voice = voice;
+    utterance.lang = lang;
     window.speechSynthesis.speak(utterance);
 }
