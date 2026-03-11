@@ -143,6 +143,8 @@ body::before {
   height: 100%;
   object-fit: cover;
   transform: scaleX(-1); /* Flip for natural view */
+  z-index: 10;
+  position: relative;
 }
 
 .hardware-badge {
@@ -186,7 +188,7 @@ body::before {
   right: 5%;
   text-align: center;
   pointer-events: none;
-  z-index: 20;
+  z-index: 100; /* Much higher to stay on top of video */
 }
 
 #live-subtitle {
