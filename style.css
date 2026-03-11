@@ -5,8 +5,8 @@
   --accent: #34d399;
   --accent-2: #6ee7b7;
   --bg-dark: #064e3b;
-  --card-bg: rgba(6, 78, 59, 0.7);
-  --text-main: #f0fdf4;
+  --card-bg: rgba(28, 6, 78, 0.7);
+  --text-main: #fdf4f0;
   --text-muted: #a7f3d0;
   --success: #10b981;
   --error: #f43f5e;
@@ -39,7 +39,7 @@ body::before {
   left: 0;
   width: 100%;
   height: 100%;
-  background: 
+  background:
     radial-gradient(at 0% 0%, rgba(52, 211, 153, 0.15) 0px, transparent 50%),
     radial-gradient(at 100% 0%, rgba(16, 185, 129, 0.1) 0px, transparent 50%),
     radial-gradient(at 50% 50%, rgba(6, 182, 212, 0.05) 0px, transparent 50%);
@@ -47,7 +47,8 @@ body::before {
 }
 
 .glass-card {
-  background: rgba(15, 23, 42, 0.5); /* Semi-transparent */
+  background: rgba(15, 23, 42, 0.5);
+  /* Semi-transparent */
   backdrop-filter: blur(40px) saturate(180%);
   -webkit-backdrop-filter: blur(40px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.15);
@@ -83,7 +84,9 @@ body::before {
 }
 
 @keyframes shine {
-  to { background-position: 200% center; }
+  to {
+    background-position: 200% center;
+  }
 }
 
 .header p {
@@ -124,7 +127,9 @@ body::before {
   transition: 0.3s;
 }
 
-.swap-btn:hover { transform: rotate(180deg); }
+.swap-btn:hover {
+  transform: rotate(180deg);
+}
 
 /* Video Feed Container */
 .video-container {
@@ -135,14 +140,15 @@ body::before {
   border-radius: 20px;
   overflow: hidden;
   margin-bottom: 2rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 #webcam-feed {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transform: scaleX(-1); /* Flip for natural view */
+  transform: scaleX(-1);
+  /* Flip for natural view */
   z-index: 10;
   position: relative;
 }
@@ -163,7 +169,7 @@ body::before {
   align-items: center;
   gap: 8px;
   z-index: 21;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   animation: glideIn 0.5s ease;
 }
 
@@ -177,8 +183,15 @@ body::before {
 }
 
 @keyframes glideIn {
-  from { opacity: 0; transform: translateX(20px); }
-  to { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .subtitle-overlay {
@@ -188,7 +201,8 @@ body::before {
   right: 5%;
   text-align: center;
   pointer-events: none;
-  z-index: 100; /* Much higher to stay on top of video */
+  z-index: 100;
+  /* Much higher to stay on top of video */
 }
 
 #live-subtitle {
@@ -199,8 +213,8 @@ body::before {
   border-radius: 8px;
   font-size: 1.25rem;
   font-weight: 600;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-  border: 1px solid rgba(255,255,255,0.1);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 
@@ -211,7 +225,8 @@ body::before {
   gap: 1.5rem;
 }
 
-.input-box, .output-box {
+.input-box,
+.output-box {
   background: rgba(15, 23, 42, 0.5);
   border-radius: 16px;
   padding: 1.5rem;
@@ -231,7 +246,7 @@ body::before {
   font-size: 0.75rem;
   font-weight: 800;
   text-transform: uppercase;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .text-content {
@@ -286,9 +301,20 @@ body::before {
 }
 
 @keyframes pulse {
-  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-  70% { transform: scale(1.1); box-shadow: 0 0 0 20px rgba(239, 68, 68, 0); }
-  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  }
+
+  70% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 20px rgba(239, 68, 68, 0);
+  }
+
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
 }
 
 .mic-icon {
@@ -315,6 +341,13 @@ body::before {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

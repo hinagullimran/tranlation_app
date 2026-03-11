@@ -2,6 +2,16 @@
 
 A premium, high-performance voice translation web application that provides instant transcription and translation. Features a high-performance Mint Green glassmorphism interface and live webcam subtitles.
 
+## 🔍 Troubleshooting (If Detection Fails)
+
+If your camera or language detection isn't working:
+
+1.  **Use Google Chrome**: This app uses the Web Speech API which is best supported in **Chrome** or **Edge**.
+2.  **Check Permissions**: Look at the top-left of your browser bar. Make sure **Camera** and **Microphone** are set to "Allow".
+3.  **Localhost only**: If you are not using `localhost`, your browser may block the microphone for security. Always run the app using `npx serve` or a similar local server.
+4.  **Speak Clearly**: Ensure your microphone is positioned correctly and speak clearly in the language selected in the "Source" dropdown.
+5.  **Look for the Pulse**: When you click the Microphone, the button should pulse in sync with your voice volume. If it doesn't pulse, your mic is not picking up sound.
+
 ## ✨ Features
 
 - **🎤 Live Video & Subtitles**: Real-time webcam feed with live translated floating subtitles.

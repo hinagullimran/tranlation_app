@@ -12,20 +12,68 @@ let isListening = false;
 let recognition;
 let stream;
 let translationTimeout;
+let audioContext;
+let analyser;
+let dataArray;
+
+// Check Browser Compatibility
+const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+const isEdge = /Edg/.test(navigator.userAgent);
+
+if (!isChrome && !isEdge) {
+    statusText.innerHTML = "⚠️ <strong>WARNING</strong>: For best results, please use <a href='https://www.google.com/chrome/' style='color:white'>Google Chrome</a> or Microsoft Edge. Your current browser may not support live voice detection.";
+}
 
 // Initialize Webcam with flexible constraints
 async function initWebcam() {
     try {
         stream = await navigator.mediaDevices.getUserMedia({ 
             video: true, // More flexible
-            audio: false 
+            audio: true // Request audio too for volume visualization
         });
         video.srcObject = stream;
-        console.log("Webcam initialized successfully");
+        
+        // Setup Volume Visualization
+        setupVolumeIndicator(stream);
+        
+        console.log("Webcam and Mic Access Granted");
     } catch (err) {
-        console.error("Webcam error:", err);
-        statusText.innerText = "Camera access denied or not found. Audio only mode.";
+        console.error("Connectivity error:", err);
+        statusText.innerText = "Camera/Mic access denied. Please check permissions in your browser bar.";
     }
+}
+
+function setupVolumeIndicator(stream) {
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const source = audioContext.createMediaStreamSource(stream);
+    analyser = audioContext.createAnalyser();
+    analyser.fftSize = 256;
+    source.connect(analyser);
+    
+    const bufferLength = analyser.frequencyBinCount;
+    dataArray = new Uint8Array(bufferLength);
+    
+    updateVolume();
+}
+
+function updateVolume() {
+    if (!isListening) {
+        requestAnimationFrame(updateVolume);
+        return;
+    }
+    
+    analyser.getByteFrequencyData(dataArray);
+    let values = 0;
+    for (let i = 0; i < dataArray.length; i++) {
+        values += dataArray[i];
+    }
+    const average = values / dataArray.length;
+    
+    // Scale the mic button pulse based on volume
+    const scale = 1 + (average / 100);
+    micBtn.style.transform = `scale(${scale})`;
+    
+    requestAnimationFrame(updateVolume);
 }
 
 initWebcam();
@@ -42,16 +90,15 @@ if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
         micBtn.classList.add('listening');
         statusText.innerText = "Listening... Speak now";
         statusText.classList.add('active');
-        inputText.innerText = "Listening for voice...";
+        inputText.innerText = "Listening for " + srcLangSelect.options[srcLangSelect.selectedIndex].text + "...";
+        if (audioContext && audioContext.state === 'suspended') {
+            audioContext.resume();
+        }
     };
 
-    recognition.onend = () => {
-        isListening = false;
-        micBtn.classList.remove('listening');
-        if (!statusText.innerText.includes("Error")) {
-            statusText.innerText = "Recording paused. Click to resume.";
-        }
-        statusText.classList.remove('active');
+    recognition.onspeechstart = () => {
+        console.log("Speech detected by system...");
+        statusText.innerText = "Transcribing voice...";
     };
 
     recognition.onresult = (event) => {
@@ -88,6 +135,15 @@ if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
                 }, 1500);
             }
         }
+    };
+
+    recognition.onend = () => {
+        isListening = false;
+        micBtn.classList.remove('listening');
+        if (!statusText.innerText.includes("Error")) {
+            statusText.innerText = "Recording paused. Click to resume.";
+        }
+        statusText.classList.remove('active');
     };
 
     recognition.onerror = (event) => {
@@ -143,29 +199,41 @@ async function translateText(text) {
     }
 }
 
-// Language Logic
+// Language Logic updates
+function updateRecognitionLang() {
+    if (recognition) {
+        recognition.lang = srcLangSelect.value;
+        if (isListening) {
+            recognition.stop();
+            // Restarts in onend or with a timeout
+            setTimeout(() => recognition.start(), 300);
+        }
+    }
+}
+
+srcLangSelect.addEventListener('change', updateRecognitionLang);
+targetLangSelect.addEventListener('change', () => {
+    statusText.innerText = `Target set to ${targetLangSelect.options[targetLangSelect.selectedIndex].text}`;
+    setTimeout(() => { if(!isListening) statusText.innerText = "Click to Resume Recording"; }, 2000);
+});
+
 swapBtn.addEventListener('click', () => {
     const sVal = srcLangSelect.value;
     const tVal = targetLangSelect.value;
     
-    // Find matching options
+    // Attempt to map back
     const srcOptions = Array.from(srcLangSelect.options);
     const targetOptions = Array.from(targetLangSelect.options);
     
-    const newTarget = srcOptions.find(o => o.value.startsWith(tVal))?.value;
-    const newSrc = targetOptions.find(o => sVal.startsWith(o.value))?.value;
+    // Find target code that matches current source
+    const newTarget = targetOptions.find(o => sVal.startsWith(o.value))?.value;
+    // Find source code that matches current target
+    const newSrc = srcOptions.find(o => o.value.startsWith(tVal))?.value;
 
-    if (newTarget) srcLangSelect.value = newTarget;
-    if (newSrc) targetLangSelect.value = newSrc;
+    if (newSrc) srcLangSelect.value = newSrc;
+    if (newTarget) targetLangSelect.value = newTarget;
     
-    // If listening, restart with new language
-    if (isListening) {
-        recognition.stop();
-        setTimeout(() => {
-            recognition.lang = srcLangSelect.value;
-            recognition.start();
-        }, 400);
-    }
+    updateRecognitionLang();
 });
 
 // Mic Click logic
@@ -173,9 +241,15 @@ micBtn.addEventListener('click', () => {
     if (isListening) {
         recognition.stop();
     } else {
-        // Very important: set language before starting
         recognition.lang = srcLangSelect.value;
-        recognition.start();
+        try {
+            recognition.start();
+        } catch (e) {
+            console.error("Recognition start error:", e);
+            // Fallback: stop and start
+            recognition.stop();
+            setTimeout(() => recognition.start(), 200);
+        }
     }
 });
 
